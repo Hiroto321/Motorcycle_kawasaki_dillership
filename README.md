@@ -14,7 +14,7 @@
 
 ## 🛠 Технологический стек
 
-- **Backend:** Python, Flask
+- **Backend:** Python, Flask, FastAPI
 - **Frontend:** HTML, CSS, JavaScript
 - **База данных:** PostgreSQL
 
