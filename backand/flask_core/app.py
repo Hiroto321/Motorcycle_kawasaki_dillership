@@ -4,60 +4,88 @@ from database import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from motorcycles_api import get_all_motorcycles_with_details, get_hierarchy_data
 import os
+import jwt
+import datetime
+from functools import wraps
+
 
 app = Flask(__name__, 
             static_folder='static', 
             template_folder='templates')
 CORS(app)
-app.secret_key = 'dev_secret_key'
+app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
+JWT_SECRET = os.getenv('JWT_SECRET', os.urandom(32).hex())
+JWT_ALGORITHM = 'HS256'
+
+
+def generate_token(user_id, username):
+    payload = {
+        'user_id': user_id,
+        'username': username,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
+        'iat': datetime.datetime.utcnow()
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        auth_header = request.headers.get('Authorization')
+        
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+        
+        if not token:
+            return {'error': 'Токен отсутствует'}, 401
+        
+        try:
+            data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+            request.current_user = data
+        except jwt.ExpiredSignatureError:
+            return {'error': 'Токен истёк'}, 401
+        except jwt.InvalidTokenError:
+            return {'error': 'Неверный токен'}, 401
+        
+        return f(*args, **kwargs)
+    return decorated
 
 
 @app.route('/')
 def index():
-    """Главная страница"""
     return render_template('index.html')
 
 
 @app.route('/login')
 def login_page():
-    """Страница входа"""
     return render_template('login.html')
 
 
 @app.route('/register')
 def register_page():
-    """Страница регистрации"""
     return render_template('register.html')
 
 
 @app.route('/motorcycles')
 def motorcycles_page():
-    """Каталог мотоциклов"""
     return render_template('motorcycles.html')
 
 
 @app.route('/about')
 def about_page():
-    """О нас"""
     return render_template('about.html')
 
 
 @app.route('/contact')
 def contact_page():
-    """Контакты"""
     return render_template('contact.html')
 
 
 @app.route('/cart')
 def cart_page():
-    """Корзина"""
     return render_template('cart.html')
 
-
-@app.route('/404')
-def error_404():
-    """Страница ошибки 404"""
-    return render_template('404.html'), 404
 
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -116,7 +144,7 @@ def api_login():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute(
-            "SELECT user_id, password_hash, user_name FROM users WHERE user_name = %s",
+            "SELECT user_id, password_hash, user_name, email FROM users WHERE user_name = %s",
             (username,)
         )
         user = cur.fetchone()
@@ -128,11 +156,15 @@ def api_login():
             )
             conn.commit()
             
+            # Генерируем JWT
+            token = generate_token(user[0], user[2])
+            
             return {
                 'message': 'Вход выполнен',
                 'username': user[2],
+                'email': user[3],
                 'user_id': user[0],
-                'token': f"fake_token_{user[0]}"
+                'token': token
             }
         else:
             return {'error': 'Неверный логин или пароль'}, 401
@@ -150,33 +182,41 @@ def api_login():
 def news_events_page():
     return render_template('news_events.html')
 
+
 @app.route('/owners_manuals')
 def owners_manuals_page():
     return render_template('owners_manuals.html')
+
 
 @app.route('/rider_academy')
 def rider_academy_page():
     return render_template('rider_academy.html')
 
+
 @app.route('/service_centers')
 def service_centers_page():
     return render_template('service_centers.html')
+
 
 @app.route('/under_construction')
 def under_construction_page():
     return render_template('under-construction.html')
 
+
 @app.route('/warranty')
 def warranty_page():
     return render_template('warranty.html')
+
 
 @app.route('/careers')
 def careers_page():
     return render_template('careers.html')
 
+
 @app.route('/faq')
 def faq_page():
     return render_template('faq.html')
+
 
 @app.route('/financing')
 def financing_page():
@@ -296,8 +336,59 @@ def api_get_filtered_motorcycles():
     except Exception as e:
         print(f"Error: {e}")
         return {'error': 'Failed to filter motorcycles'}, 500
+    
+@app.route('/acc')
+def acc_page():
+    """Страница профиля пользователя"""
+    token = None
+    auth_header = request.headers.get('Authorization')
+    
+    # Пробуем получить токен из заголовка или cookies
+    if auth_header and auth_header.startswith('Bearer '):
+        token = auth_header.split(' ')[1]
+    else:
+        token = request.cookies.get('jwt_token')
+    
+    if not token:
+        # Если нет токена - редирект на login
+        return redirect(url_for('login_page'))
+    
+    try:
+        data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return render_template('acc.html',
+                             username=data['username'],
+                             user_id=data['user_id'])
+    except jwt.ExpiredSignatureError:
+        # Токен истёк - редирект на login
+        return redirect(url_for('login_page'))
+    except jwt.InvalidTokenError:
+        # Неверный токен - редирект на login
+        return redirect(url_for('login_page'))
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+def api_logout():
+    """API: выход из системы (клиент удаляет токен)"""
+    return {'message': 'Выход выполнен успешно'}, 200
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    """Обработка ошибки 500 - внутренняя ошибка сервера"""
+    return render_template('500.html'), 500
+
+
+@app.route('/trigger-500')
+def trigger_500():
+    """Принудительная ошибка 500"""
+    return 1/0
 
 
 if __name__ == '__main__':
     port = int(os.getenv('FLASK_PORT', 5000))
-    app.run(debug=True, port=port)
+    app.run(debug=False, port=port)
