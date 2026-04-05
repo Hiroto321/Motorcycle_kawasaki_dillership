@@ -1,0 +1,104 @@
+# ============================================
+# PYTHON
+# ============================================
+# Кэшированные файлы
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Виртуальные окружения
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ============================================
+# ENVIRONMENT VARIABLES (ВАЖНО!)
+# ============================================
+.env
+.env.local
+.env.*.local
+flask_app/.env
+fastapi_app/.env
+*.env
+
+# ============================================
+# IDE / РЕДАКТОРЫ
+# ============================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Другие
+*.swp
+*.swo
+*~
+
+# ============================================
+# DATABASE
+# ============================================
+# SQLite (если используете)
+*.db
+*.sqlite
+*.sqlite3
+
+# Flask instance folder
+instance/
+
+# ============================================
+# OPERATING SYSTEM
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.Trash-*
+
+# ============================================
+# LOGS AND TESTS
+# ============================================
+*.log
+logs/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# ============================================
+# BUILD / DIST
+# ============================================
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ============================================
+# STATIC FILES (опционально)
+# ============================================
+# Если картинки слишком большие
+flask_app/static/images/*.jpg
+flask_app/static/images/*.png
