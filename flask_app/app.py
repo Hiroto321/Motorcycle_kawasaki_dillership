@@ -17,7 +17,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Главная страница
+
 @app.route('/')
 def index():
     return render_template('index.html')
