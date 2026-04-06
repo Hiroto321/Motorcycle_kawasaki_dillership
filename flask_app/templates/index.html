@@ -1,9 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Sample Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawasaki Dealership - Главная</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- Your content goes here -->
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">🏍 Kawasaki Dealership</h1>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/catalog">Каталог</a></li>
+                {% if session.user_id %}
+                    <li><a href="/profile">Профиль ({{ session.username }})</a></li>
+                    <li><a href="/logout" class="btn-logout">Выйти</a></li>
+                {% else %}
+                    <li><a href="/login" class="btn-login">Войти</a></li>
+                    <li><a href="/register" class="btn-register">Регистрация</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h2>Добро пожаловать в мотосалон Kawasaki!</h2>
+            <p>Лучшие мотоциклы по лучшим ценам</p>
+            <a href="/catalog" class="btn-primary">Смотреть каталог</a>
+        </div>
+    </header>
+
+    <section class="features">
+        <div class="container">
+            <h3>Наши преимущества</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🏍 Широкий выбор</h4>
+                    <p>Более 50 моделей мотоциклов Kawasaki</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💰 Лучшие цены</h4>
+                    <p>Гибкая система скидок и рассрочки</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🚚 Доставка</h4>
+                    <p>Доставка по всей России</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Kawasaki Dealership. Все права защищены.</p>
+        </div>
+    </footer>
 </body>
 </html>
