@@ -1,61 +1,45 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kawasaki Dealership - Главная</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <h1 class="logo">🏍 Kawasaki Dealership</h1>
-            <ul class="nav-links">
-                <li><a href="/">Главная</a></li>
-                <li><a href="/catalog">Каталог</a></li>
-                {% if session.user_id %}
-                    <li><a href="/profile">Профиль ({{ session.username }})</a></li>
-                    <li><a href="/logout" class="btn-logout">Выйти</a></li>
-                {% else %}
-                    <li><a href="/login" class="btn-login">Войти</a></li>
-                    <li><a href="/register" class="btn-register">Регистрация</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+    <div class="wrapper">
+        <header class="container">
+            <h1 class="logo">🏍️ Kawasaki Dealership</h1>
+            <nav>
+                <ul>
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    {% if session.user_id %}
+                        <!-- Если пользователь вошёл -->
+                        <li><a href="/profile">{{ session.username }}</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    {% else %}
+                        <!-- Если пользователь НЕ вошёл -->
+                        <li><a href="/login">Log in</a></li>
+                        <li class="btn"><a href="/register">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
 
-    <header class="hero">
-        <div class="container">
-            <h2>Добро пожаловать в мотосалон Kawasaki!</h2>
-            <p>Лучшие мотоциклы по лучшим ценам</p>
-            <a href="/catalog" class="btn-primary">Смотреть каталог</a>
-        </div>
-    </header>
-
-    <section class="features">
-        <div class="container">
-            <h3>Наши преимущества</h3>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h4>🏍 Широкий выбор</h4>
-                    <p>Более 50 моделей мотоциклов Kawasaki</p>
-                </div>
-                <div class="feature-card">
-                    <h4>💰 Лучшие цены</h4>
-                    <p>Гибкая система скидок и рассрочки</p>
-                </div>
-                <div class="feature-card">
-                    <h4>🚚 Доставка</h4>
-                    <p>Доставка по всей России</p>
-                </div>
+        <div class="hero container">
+            <div class="hero--info">
+                <h2>KAWASAKI</h2>
+                <h1>MOTORCYCLE</h1>
+                <p>Welcome to the world of Kawasaki!
+                This is where your story of freedom, precision engineering, and pure thrill begins. We've built this site for those who live for the road, appreciate the true character of two-wheeled machines, and seek a reliable partner for every mile of the journey.</p>
+                <a href="/register" class="btn">Find a Motorcycle</a>
             </div>
+            <img src="{{ url_for('static', filename='images/logo1.png') }}" alt="Kawasaki">
         </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Kawasaki Dealership. Все права защищены.</p>
-        </div>
-    </footer>
+    </div>
 </body>
+
 </html>
