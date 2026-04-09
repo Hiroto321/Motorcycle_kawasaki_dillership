@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main>
+        <div class="circle"></div>
+        <div class="login-form-container">
+            <h1 class="form-title">Log in</h1>
+            <div class="form-fields">
+                <div class="form-field">
+                    <input type="email" placeholder="Mail">
+                </div>
+                <div class="form-field">
+                    <input type="password" placeholder="Password">
+                </div>
+            </div>
+            <div class="forgot-password">
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+            <div class="form_buttons">
+                <button class="button">Log in</button>
+            </div>
+            <div class="register-link">
+                <p>Haven't account? <a href="/Motorcycle_kawasaki_dillership/flask_app/templates/register.html">Registration</a></p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
