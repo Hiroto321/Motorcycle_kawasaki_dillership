@@ -1,0 +1,36 @@
+{
+    "project_name": "Kawasaki Motorcycle Dealership",
+    "version": "1.0.0",
+    "description": "Full-stack web application for Kawasaki motorcycle dealership",
+    "team": [
+        {
+            "name": "Парфенов Даниил",
+            "role": "Backend Developer",
+            "responsibilities": "Flask & FastAPI services, database integration"
+        },
+        {
+            "name": "Александр Савин",
+            "role": "Database Engineer",
+            "responsibilities": "Database design, normalization, replication"
+        },
+        {
+            "name": "Александр Каримов",
+            "role": "Frontend Developer",
+            "responsibilities": "HTML/CSS/JS interface, API integration"
+        }
+    ],
+    "tech_stack": {
+        "backend": ["Flask", "FastAPI", "Python 3.11+"],
+        "database": "PostgreSQL 16",
+        "frontend": ["HTML5", "CSS3", "JavaScript (Fetch API)"],
+        "tools": ["Git", "GitHub", "pgAdmin", "VS Code"]
+    },
+    "features": [
+        "User registration and authentication with JWT",
+        "Motorcycle catalog with search and filtering",
+        "Shopping cart and orders",
+        "Admin panel for content management",
+        "Analytics dashboard",
+        "Master-Slave database replication"
+    ]
+}
