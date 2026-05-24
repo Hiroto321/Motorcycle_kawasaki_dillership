@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawasaki Dealership - News & Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/service_pages.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="container">
+            <span class="logo">KAWASAKI</span>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('motorcycles_page') }}">Motorcycles</a></li>
+                    <li><a href="{{ url_for('cart_page') }}">Cart</a></li>
+                    <li><a href="{{ url_for('contact_page') }}">Contact us</a></li>
+                    <li class="btn"><a href="{{ url_for('login_page') }}">Log in</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="service-page container">
+            <div class="page-header">
+                <h1>News & Events</h1>
+                <p>Stay updated with the latest Kawasaki news, launches, and events</p>
+            </div>
+
+            <div class="events-grid">
+                <div class="event-card featured">
+                    <div class="event-date">March 15, 2024</div>
+                    <h3>2024 Ninja ZX-10R Launch Event</h3>
+                    <p>Join us for the unveiling of the all-new 2024 Ninja ZX-10R. Meet the engineers, test ride the new model, and enjoy exclusive launch offers.</p>
+                    <p class="event-location">📍 Kawasaki World Headquarters, Moscow</p>
+                    <button class="btn-small">Register Now</button>
+                </div>
+
+                <div class="event-card">
+                    <div class="event-date">April 5-7, 2024</div>
+                    <h3>Kawasaki Rider's Festival</h3>
+                    <p>Three days of riding, workshops, and community. Group rides through scenic routes, safety seminars, and demo rides of all 2024 models.</p>
+                    <p class="event-location">📍 Various locations across Russia</p>
+                    <button class="btn-small">Learn More</button>
+                </div>
+            </div>
+            
+            <div class="newsletter-signup">
+                <h2>Stay Updated</h2>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button class="btn">Subscribe</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-logo">
+                    <h3>KAWASAKI</h3>
+                    <p>Let the good times roll. Experience the thrill of the ride.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="{{ url_for('service_centers_page') }}">Service Centers</a></li>
+                            <li><a href="{{ url_for('owners_manuals_page') }}">Owner's Manuals</a></li>
+                            <li><a href="{{ url_for('warranty_page') }}">Warranty</a></li>
+                            <li><a href="{{ url_for('financing_page') }}">Financing</a></li>
+                            <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="{{ url_for('about_page') }}">About Us</a></li>
+                            <li><a href="{{ url_for('careers_page') }}">Careers</a></li>
+                            <li><a href="{{ url_for('news_events_page') }}">News & Events</a></li>
+                            <li><a href="{{ url_for('rider_academy_page') }}">Rider Academy</a></li>
+                            <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

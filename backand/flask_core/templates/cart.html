@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart | Kawasaki</title>
+    <link rel="stylesheet" href="/Motorcycle_kawasaki_dillership/flask_app/static/css/cart.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="container">
+            <span class="logo"></span>
+            <nav>
+                <ul>
+                    <li><a href="/Motorcycle_kawasaki_dillership/flask_app/templates/index.html">Home</a></li>
+                    <li><a href="motorcycles.html">Motorcycles</a></li>
+                    <li class="active"><a href="cart.html">Cart</a></li>
+                    <li><a href="contact.html">Contact us</a></li>
+                    <li class="user-menu">
+                        <span class="user-name">John Rider</span>
+                        <a href="login.html" class="logout-btn">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="cart-container container">
+            <div class="cart-header">
+                <h1>MY CART</h1>
+                <h2>YOUR SELECTED MOTORCYCLES</h2>
+            </div>
+
+            <div class="cart-content">
+                <div class="cart-items">
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="/Motorcycle_kawasaki_dillership/flask_app/img/moto1.png" alt="Ninja H2">
+                        </div>
+                        <div class="item-details">
+                            <h3>Kawasaki Ninja H2</h3>
+                            <p class="item-spec">998cc | 310 HP | Supercharged</p>
+                            <div class="item-quantity">
+                                <button class="qty-btn minus">-</button>
+                                <input type="number" value="1" min="1" max="10" readonly>
+                                <button class="qty-btn plus">+</button>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            <span class="price">$32,500</span>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="/Motorcycle_kawasaki_dillership/flask_app/img/moto2.png" alt="ZX-10R">
+                        </div>
+                        <div class="item-details">
+                            <h3>Kawasaki ZX-10R</h3>
+                            <p class="item-spec">998cc | 203 HP | Racing Ready</p>
+                            <div class="item-quantity">
+                                <button class="qty-btn minus">-</button>
+                                <input type="number" value="1" min="1" max="10" readonly>
+                                <button class="qty-btn plus">+</button>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            <span class="price">$18,999</span>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <h3>ORDER SUMMARY</h3>
+                    <div class="summary-row">
+                        <span>Subtotal (2 items)</span>
+                        <span>$51,499</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Fee</span>
+                        <span>$0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (10%)</span>
+                        <span>$5,149.90</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>$56,648.90</span>
+                    </div>
+                    <button class="checkout-btn">PROCEED TO CHECKOUT</button>
+                    <button class="continue-btn">CONTINUE SHOPPING</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/Motorcycle_kawasaki_dillership/flask_app/js/main.js"></script>
+    <script src="/Motorcycle_kawasaki_dillership/flask_app/js/theme-switcher.js"></script>
+</body>
+</html>

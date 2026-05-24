@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motorcycles | Kawasaki</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/motorcycles.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="container">
+            <span class="logo">KAWASAKI</span>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="active"><a href="{{ url_for('motorcycles_page') }}">Motorcycles</a></li>
+                    <li><a href="{{ url_for('cart_page') }}">Cart</a></li>
+                    <li><a href="{{ url_for('contact_page') }}">Contact us</a></li>
+                    <li class="btn"><a href="{{ url_for('login_page') }}">Log in</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="motorcycles-container container">
+            <div class="page-header">
+                <h2>RIDE THE LEGEND</h2>
+                <h1>OUR MOTORCYCLES</h1>
+                <p>Discover our complete lineup of precision-engineered machines.</p>
+            </div>
+
+            <!-- 🔍 Search & Sort -->
+            <div class="controls-bar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search motorcycles...">
+                    <button id="searchBtn">🔍</button>
+                </div>
+                <div class="sort-box">
+                    <label>Sort:</label>
+                    <select id="sortSelect">
+                        <option value="name-asc">Name A-Z</option>
+                        <option value="name-desc">Name Z-A</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="year-desc">Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 🗂️ Иерархическая навигация -->
+            <div class="hierarchy-nav">
+                <!-- Level 1: Groups -->
+                <div class="hierarchy-level" id="level-groups">
+                    <h4>Type</h4>
+                    <div class="hierarchy-options" id="groupsList">
+                        <button class="h-btn active" data-type="group" data-value="">All Types</button>
+                        <!-- Заполняется из API -->
+                    </div>
+                </div>
+
+                <!-- Level 2: Series -->
+                <div class="hierarchy-level hidden" id="level-series">
+                    <h4>Model Series</h4>
+                    <div class="hierarchy-options" id="seriesList">
+                        <button class="h-btn" data-type="series" data-value="">All Series</button>
+                        <!-- Заполняется из API -->
+                    </div>
+                </div>
+
+                <!-- Level 3: Categories -->
+                <div class="hierarchy-level hidden" id="level-categories">
+                    <h4>Category</h4>
+                    <div class="hierarchy-options" id="categoriesList">
+                        <button class="h-btn" data-type="category" data-value="">All Categories</button>
+                        <!-- Заполняется из API -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📊 Info -->
+            <div class="results-info">
+                <span id="resultsCount">0</span> motorcycles found
+            </div>
+
+            <!-- 🏍️ Grid -->
+            <div class="motorcycles-grid" id="motorcyclesGrid">
+                <div class="loading"><p>Loading...</p></div>
+            </div>
+
+            <!-- 📄 Pagination -->
+            <div class="pagination" id="pagination"></div>
+
+            <!-- ❌ Empty -->
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <h3>No motorcycles found</h3>
+                <button class="reset-btn" onclick="resetAll()">VIEW ALL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔍 Modal -->
+    <div id="motoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
+    <script>
+    // === Глобальные данные ===
+    let hierarchy = { groups: [], series: [], categories: [] };
+    let filters = { group: '', series: '', category: '', search: '', sort: 'name-asc', page: 1 };
+    let allMotos = [];
+
+    // === Инициализация ===
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadHierarchy();
+        await loadMotorcycles();
+        setupEvents();
+    });
+
+    // === Загрузка иерархии ===
+    async function loadHierarchy() {
+        const res = await fetch('/api/motorcycles/hierarchy');
+        const data = await res.json();
+        hierarchy = data;
+        renderGroups();
+    }
+
+    // === Рендер групп ===
+    function renderGroups() {
+        const container = document.getElementById('groupsList');
+        container.innerHTML = `<button class="h-btn active" data-type="group" data-value="">All Types</button>`;
+        
+        hierarchy.groups.forEach(g => {
+            const btn = document.createElement('button');
+            btn.className = 'h-btn';
+            btn.dataset.type = 'group';
+            btn.dataset.value = g.slug;
+            btn.textContent = g.name;
+            btn.onclick = handleFilter;
+            container.appendChild(btn);
+        });
+    }
+
+    // === Рендер серий (после выбора группы) ===
+    function renderSeries(groupSlug) {
+        const container = document.getElementById('seriesList');
+        container.innerHTML = `<button class="h-btn" data-type="series" data-value="">All Series</button>`;
+        
+        const filtered = hierarchy.series.filter(s => 
+            !groupSlug || s.group_id === hierarchy.groups.find(g => g.slug === groupSlug)?.id
+        );
+        
+        filtered.forEach(s => {
+            const btn = document.createElement('button');
+            btn.className = 'h-btn';
+            btn.dataset.type = 'series';
+            btn.dataset.value = s.slug;
+            btn.textContent = s.name;
+            btn.onclick = handleFilter;
+            container.appendChild(btn);
+        });
+        
+        document.getElementById('level-series').classList.remove('hidden');
+    }
+
+    // === Рендер категорий (после выбора серии) ===
+    function renderCategories(seriesSlug) {
+        const container = document.getElementById('categoriesList');
+        container.innerHTML = `<button class="h-btn" data-type="category" data-value="">All Categories</button>`;
+        
+        const seriesId = hierarchy.series.find(s => s.slug === seriesSlug)?.id;
+        const filtered = hierarchy.categories.filter(c => !seriesId || c.series_id === seriesId);
+        
+        filtered.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'h-btn';
+            btn.dataset.type = 'category';
+            btn.dataset.value = c.name;
+            btn.textContent = c.name;
+            btn.onclick = handleFilter;
+            container.appendChild(btn);
+        });
+        
+        document.getElementById('level-categories').classList.remove('hidden');
+    }
+
+    // === Обработчик фильтров ===
+    function handleFilter(e) {
+        const type = e.currentTarget.dataset.type;
+        const value = e.currentTarget.dataset.value;
+        
+        // Сброс зависимых уровней
+        if (type === 'group') {
+            filters.group = value;
+            filters.series = '';
+            filters.category = '';
+            document.querySelectorAll('#seriesList .h-btn, #categoriesList .h-btn').forEach(b => b.classList.remove('active'));
+            if (value) renderSeries(value);
+            else document.getElementById('level-series').classList.add('hidden');
+        }
+        if (type === 'series') {
+            filters.series = value;
+            filters.category = '';
+            document.querySelectorAll('#categoriesList .h-btn').forEach(b => b.classList.remove('active'));
+            if (value) renderCategories(value);
+            else document.getElementById('level-categories').classList.add('hidden');
+        }
+        if (type === 'category') filters.category = value;
+        
+        // Обновляем активную кнопку
+        document.querySelectorAll(`[data-type="${type}"]`).forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        
+        filters.page = 1;
+        loadMotorcycles();
+    }
+
+    // === Загрузка мотоциклов ===
+    async function loadMotorcycles() {
+        const grid = document.getElementById('motorcyclesGrid');
+        grid.innerHTML = '<div class="loading"><p>Loading...</p></div>';
+        
+        const params = new URLSearchParams({
+            group: filters.group, series: filters.series, category: filters.category,
+            search: filters.search, sort: filters.sort, page: filters.page
+        });
+        
+        const res = await fetch(`/api/motorcycles/filtered?${params}`);
+        const data = await res.json();
+        
+        document.getElementById('resultsCount').textContent = data.total;
+        
+        if (data.motorcycles.length === 0) {
+            grid.style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
+            return;
+        }
+        
+        grid.style.display = 'grid';
+        document.getElementById('emptyState').style.display = 'none';
+        renderMotos(data.motorcycles);
+        renderPagination(data.page, data.pages);
+    }
+
+    // === Рендер карточек ===
+    function renderMotos(motos) {
+        const grid = document.getElementById('motorcyclesGrid');
+        grid.innerHTML = '';
+        
+        motos.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'moto-card';
+            card.onclick = () => showDetails(m);
+            
+            const img = m.image ? `/static/img/motorcycles/${m.image}` : '/static/img/motorcycles/placeholder.jpg';
+            
+            card.innerHTML = `
+                <div class="moto-img"><img src="${img}" alt="${m.name}" onerror="this.src='/static/img/motorcycles/placeholder.jpg'"></div>
+                <div class="moto-info">
+                    <h3>${m.name}</h3>
+                    <p class="moto-series">${m.series.name}</p>
+                    <p class="moto-price">$${m.price?.toLocaleString() || 'N/A'}</p>
+                    <p class="moto-year">${m.year}</p>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // === Пагинация ===
+    function renderPagination(page, pages) {
+        const container = document.getElementById('pagination');
+        container.innerHTML = '';
+        
+        if (pages <= 1) return;
+        
+        const prev = document.createElement('button');
+        prev.textContent = '←';
+        prev.disabled = page === 1;
+        prev.onclick = () => { filters.page--; loadMotorcycles(); };
+        container.appendChild(prev);
+        
+        for (let i = 1; i <= pages; i++) {
+            if (i === 1 || i === pages || (i >= page - 1 && i <= page + 1)) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = i === page ? 'active' : '';
+                btn.onclick = () => { filters.page = i; loadMotorcycles(); };
+                container.appendChild(btn);
+            }
+        }
+        
+        const next = document.createElement('button');
+        next.textContent = '→';
+        next.disabled = page === pages;
+        next.onclick = () => { filters.page++; loadMotorcycles(); };
+        container.appendChild(next);
+    }
+
+    // === Детали мотоцикла ===
+    function showDetails(m) {
+        const modal = document.getElementById('motoModal');
+        const body = document.getElementById('modalBody');
+        
+        body.innerHTML = `
+            <h2>${m.name} (${m.year})</h2>
+            <p>${m.series.name} • ${m.category.name}</p>
+            <p class="price">$${m.price?.toLocaleString() || 'N/A'}</p>
+            <div class="specs">
+                ${m.specs.engine_type ? `<div><strong>Engine:</strong> ${m.specs.engine_type}</div>` : ''}
+                ${m.specs.displacement_cc ? `<div><strong>Displacement:</strong> ${m.specs.displacement_cc} cc</div>` : ''}
+                ${m.specs.horsepower ? `<div><strong>Power:</strong> ${m.specs.horsepower}</div>` : ''}
+                ${m.specs.torque ? `<div><strong>Torque:</strong> ${m.specs.torque}</div>` : ''}
+                ${m.specs.transmission ? `<div><strong>Transmission:</strong> ${m.specs.transmission}</div>` : ''}
+                ${m.specs.seat_height ? `<div><strong>Seat Height:</strong> ${m.specs.seat_height}"</div>` : ''}
+                ${m.specs.fuel_capacity ? `<div><strong>Fuel:</strong> ${m.specs.fuel_capacity} gal</div>` : ''}
+                ${m.specs.weight ? `<div><strong>Weight:</strong> ${m.specs.weight} lbs</div>` : ''}
+            </div>
+        `;
+        modal.style.display = 'flex';
+    }
+
+    // === События ===
+    function setupEvents() {
+        document.getElementById('searchBtn').onclick = () => {
+            filters.search = document.getElementById('searchInput').value;
+            filters.page = 1;
+            loadMotorcycles();
+        };
+        document.getElementById('sortSelect').onchange = (e) => {
+            filters.sort = e.target.value;
+            filters.page = 1;
+            loadMotorcycles();
+        };
+        document.querySelector('.close').onclick = () => document.getElementById('motoModal').style.display = 'none';
+        window.onclick = (e) => { if (e.target.id === 'motoModal') e.target.style.display = 'none'; };
+    }
+
+    function resetAll() {
+        filters = { group: '', series: '', category: '', search: '', sort: 'name-asc', page: 1 };
+        document.querySelectorAll('.h-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-type="group"][data-value=""]').classList.add('active');
+        document.getElementById('level-series').classList.add('hidden');
+        document.getElementById('level-categories').classList.add('hidden');
+        document.getElementById('searchInput').value = '';
+        loadMotorcycles();
+    }
+    </script>
+</body>
+</html>

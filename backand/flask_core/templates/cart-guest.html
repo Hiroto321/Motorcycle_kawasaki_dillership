@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Access | Kawasaki</title>
+    <link rel="stylesheet" href="/Motorcycle_kawasaki_dillership/flask_app/static/css/cart-guest.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="container">
+            <span class="logo"></span>
+            <nav>
+                <ul>
+                    <li><a href="/Motorcycle_kawasaki_dillership/flask_app/templates/index.html">Home</a></li>
+                    <li><a href="motorcycles.html">Motorcycles</a></li>
+                    <li class="active"><a href="cart.html">Cart</a></li>
+                    <li><a href="contact.html">Contact us</a></li>
+                    <li class="btn"><a href="login.html">Log in</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="auth-required container">
+            <div class="auth-content">
+                <div class="auth-icon">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 3H21V21H3V3Z" stroke="#488165" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 9H21" stroke="#488165" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 21V9" stroke="#488165" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="9" cy="15" r="2" fill="#488165"/>
+                        <circle cx="15" cy="9" r="2" fill="#488165"/>
+                    </svg>
+                </div>
+                <h1>ACCESS REQUIRED</h1>
+                <h2>PLEASE LOG IN TO VIEW YOUR CART</h2>
+                <p>To view and manage your shopping cart, you need to be logged into your account.<br>
+                Registration gives you access to exclusive offers, order tracking, and faster checkout.</p>
+                
+                <div class="auth-actions">
+                    <a href="#" class="btn login-btn">LOG IN TO ACCOUNT</a>
+                    <a href="#" class="btn register-btn">CREATE NEW ACCOUNT</a>
+                </div>
+                
+                <div class="benefits">
+                    <h3>Why create an account?</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>Save your favorite bikes</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>Track orders history</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>Exclusive member prices</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>Express checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-image">
+                <img src="/Motorcycle_kawasaki_dillership/flask_app/img/logo1.png" alt="Kawasaki">
+            </div>
+        </div>
+    </div>
+    <script src="/Motorcycle_kawasaki_dillership/flask_app/js/main.js"></script>
+    <script src="/Motorcycle_kawasaki_dillership/flask_app/js/theme-switcher.js"></script>
+</body>
+</html>

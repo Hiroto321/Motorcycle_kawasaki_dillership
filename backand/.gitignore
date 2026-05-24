@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+.env
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Database (НЕ коммить реальные данные!)
+*.sql
+!database/schema.sql
+!database/seed_schema.sql
+
+# Static generated files
+static/css/*.min.css
+static/js/*.min.js
+
+# IDE specific
+*.sublime-project
+*.sublime-workspace

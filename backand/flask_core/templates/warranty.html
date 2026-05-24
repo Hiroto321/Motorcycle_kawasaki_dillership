@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warranty</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/service_pages.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="container">
+            <span class="logo">KAWASAKI</span>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('motorcycles_page') }}">Motorcycles</a></li>
+                    <li><a href="{{ url_for('cart_page') }}">Cart</a></li>
+                    <li><a href="{{ url_for('contact_page') }}">Contact us</a></li>
+                    <li class="btn"><a href="{{ url_for('login_page') }}">Log in</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="service-page container">
+            <div class="page-header">
+                <h1>Warranty Information</h1>
+                <p>Understanding your Kawasaki warranty coverage</p>
+            </div>
+
+            <div class="warranty-grid">
+                <div class="warranty-card">
+                    <div class="warranty-icon">🛡️</div>
+                    <h3>Standard Limited Warranty</h3>
+                    <p class="duration">24 months / Unlimited miles</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="{{ url_for('warranty_page') }}">Warranty</a></li>
+                        <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
